@@ -13,6 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 import sqlite3
 import os
+import re
 from datetime import datetime
 from functools import wraps
 
@@ -107,6 +108,14 @@ def register():
 
         if not username or not email or not password:
             return render_template('register.html', error='All fields are required.')
+
+        # Server-side password strength validation (mirrors client rules)
+        if len(password) < 6:
+            return render_template('register.html', error='Password must be at least 6 characters.')
+        if not re.search(r'[a-zA-Z]', password):
+            return render_template('register.html', error='Password must contain at least one letter.')
+        if not re.search(r'[0-9]', password):
+            return render_template('register.html', error='Password must contain at least one number.')
 
         hashed = generate_password_hash(password)
         try:

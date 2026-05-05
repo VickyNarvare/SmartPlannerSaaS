@@ -180,9 +180,13 @@ function renderAllTasks(tasks) {
 /* ------------------------------------------------------------------ */
 
 function buildTaskItem(task) {
-    const item = document.createElement('div');
+    const item  = document.createElement('div');
+    const color = getSubjectColor(task.subject);
+
     item.className = `task-item${task.status ? ' completed' : ''}`;
     item.dataset.id = task.id;
+    // Apply subject color as left border
+    item.style.borderLeft = `4px solid ${color}`;
 
     item.innerHTML = `
         <input
@@ -193,7 +197,9 @@ function buildTaskItem(task) {
             onchange="toggleTaskStatus(${task.id}, this.checked)"
         />
         <div class="task-body">
-            <div class="task-subject">${escHtml(task.subject)}</div>
+            <div class="task-subject">
+                <span class="subject-dot" style="background:${color};"></span>${escHtml(task.subject)}
+            </div>
             <div class="task-meta">
                 <span>📅 ${formatDate(task.date)}</span>
                 <span>🕐 ${formatTime(task.start_time)} – ${formatTime(task.end_time)}</span>
@@ -294,6 +300,8 @@ function openModal(mode, taskId = null) {
 
     overlay.classList.add('open');
     document.getElementById('task-subject').focus();
+    // Sync color dot for whatever subject is already in the field
+    updateModalSubjectDot();
 }
 
 function closeModal() {
@@ -389,6 +397,20 @@ async function refreshAll() {
 
 function emptyState(msg) {
     return `<div class="empty-state"><div class="empty-icon">📭</div><p>${msg}</p></div>`;
+}
+
+/** Update the color dot shown next to the subject input in the modal. */
+function updateModalSubjectDot() {
+    const input = document.getElementById('task-subject');
+    const dot   = document.getElementById('modal-subject-dot');
+    if (!input || !dot) return;
+    const subject = input.value.trim();
+    if (subject) {
+        dot.style.background = getSubjectColor(subject);
+        dot.style.display    = 'inline-block';
+    } else {
+        dot.style.display = 'none';
+    }
 }
 
 /** Escape HTML to prevent XSS. */

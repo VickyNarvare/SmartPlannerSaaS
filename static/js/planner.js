@@ -73,13 +73,17 @@ async function loadDailyView(date) {
         tasks.sort((a, b) => a.start_time.localeCompare(b.start_time));
 
         tasks.forEach(task => {
+            const color = getSubjectColor(task.subject);
+            const bgAlpha = getSubjectColorAlpha(task.subject, task.status ? 0.18 : 0.12);
+
             const slot = document.createElement('div');
             slot.className = 'timeline-slot';
             slot.innerHTML = `
                 <div class="timeline-time">${formatTime(task.start_time)}</div>
                 <div class="timeline-bar ${task.status ? 'done' : ''}"
                      onclick="openModal('edit', ${task.id})"
-                     title="${escHtml(task.subject)} (${formatTime(task.start_time)} – ${formatTime(task.end_time)})">
+                     title="${escHtml(task.subject)} (${formatTime(task.start_time)} – ${formatTime(task.end_time)})"
+                     style="border-left-color:${color}; background:${bgAlpha}; color:${color};">
                     <strong>${escHtml(task.subject)}</strong>
                     <span style="font-size:.78rem; opacity:.8; margin-left:.5rem;">
                         ${formatTime(task.start_time)} – ${formatTime(task.end_time)}
@@ -146,10 +150,14 @@ async function loadWeeklyView(anchorDate) {
             tasksDiv.innerHTML = `<span style="font-size:.72rem; color:var(--text-secondary);">—</span>`;
         } else {
             dayTasks.forEach(task => {
-                const chip = document.createElement('div');
-                chip.className = `weekly-task-chip${task.status ? ' done' : ''}`;
+                const chip  = document.createElement('div');
+                const color = getSubjectColor(task.subject);
+                chip.className   = `weekly-task-chip${task.status ? ' done' : ''}`;
                 chip.textContent = task.subject;
-                chip.title = `${task.subject} (${formatTime(task.start_time)} – ${formatTime(task.end_time)})`;
+                chip.title       = `${task.subject} (${formatTime(task.start_time)} – ${formatTime(task.end_time)})`;
+                chip.style.background  = getSubjectColorAlpha(task.subject, task.status ? 0.2 : 0.15);
+                chip.style.color       = color;
+                chip.style.borderLeft  = `3px solid ${color}`;
                 chip.onclick = () => openModal('edit', task.id);
                 tasksDiv.appendChild(chip);
             });

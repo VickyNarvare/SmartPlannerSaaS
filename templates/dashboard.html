@@ -20,12 +20,21 @@
             <a href="#" class="nav-item" data-view="tasks" onclick="switchView('tasks', this)">
                 <span class="nav-icon">✅</span> All Tasks
             </a>
+            <a href="#" class="nav-item" data-view="pomodoro" onclick="switchView('pomodoro', this)">
+                <span class="nav-icon">⏱️</span> Pomodoro
+            </a>
+            <a href="#" class="nav-item" data-view="analytics" onclick="switchView('analytics', this)">
+                <span class="nav-icon">📈</span> Analytics
+            </a>
         </nav>
 
         <div class="sidebar-footer">
             <div class="user-info">
                 <span class="user-avatar">{{ username[0]|upper }}</span>
-                <span class="user-name">{{ username }}</span>
+                <div class="user-meta">
+                    <span class="user-name">{{ username }}</span>
+                    <span class="sidebar-streak" id="sidebar-streak" style="display:none;"></span>
+                </div>
             </div>
             <a href="/logout" class="btn btn-ghost btn-sm">Logout</a>
         </div>
@@ -45,6 +54,10 @@
 
         <!-- ===== VIEW: DASHBOARD ===== -->
         <section class="view active" id="view-dashboard">
+
+            <!-- Motivational message (streak.js populates this) -->
+            <div class="motivational-banner" id="motivational-msg" style="display:none;"></div>
+
             <div class="stats-grid">
                 <div class="stat-card stat-total">
                     <div class="stat-icon">📋</div>
@@ -101,6 +114,15 @@
                 </div>
                 <div id="upcoming-tasks-list" class="task-list"></div>
             </div>
+
+            <!-- Badges -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>🏅 Achievements</h3>
+                </div>
+                <div id="badge-row" class="badge-row"></div>
+            </div>
+
         </section>
 
         <!-- ===== VIEW: PLANNER ===== -->
@@ -153,6 +175,126 @@
 
             <div id="all-tasks-list" class="task-list card"></div>
         </section>
+
+        <!-- ===== VIEW: POMODORO ===== -->
+        <section class="view" id="view-pomodoro">
+
+            <!-- Mode tabs -->
+            <div class="pomo-tabs-wrap card">
+                <button class="pomo-tab active" data-mode="focus"
+                        onclick="switchPomodoroMode('focus', this)">🎯 Focus</button>
+                <button class="pomo-tab" data-mode="short"
+                        onclick="switchPomodoroMode('short', this)">☕ Short Break</button>
+                <button class="pomo-tab" data-mode="long"
+                        onclick="switchPomodoroMode('long', this)">🛌 Long Break</button>
+            </div>
+
+            <!-- Circular timer -->
+            <div class="pomo-timer-wrap card">
+                <p class="pomo-mode-label" id="pomo-mode-label">Focus</p>
+
+                <div class="pomo-circle-wrap">
+                    <svg class="pomo-svg" viewBox="0 0 200 200" aria-label="Pomodoro timer">
+                        <!-- Background track -->
+                        <circle
+                            id="pomo-track"
+                            class="pomo-track"
+                            cx="100" cy="100" r="90"
+                        />
+                        <!-- Progress ring -->
+                        <circle
+                            id="pomo-ring"
+                            class="pomo-ring"
+                            cx="100" cy="100" r="90"
+                            style="stroke-dasharray: 565.49; stroke-dashoffset: 0;"
+                        />
+                    </svg>
+                    <!-- Time text overlaid on SVG -->
+                    <div class="pomo-time-overlay">
+                        <span class="pomo-time-text" id="pomo-time-text">25:00</span>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="pomo-controls">
+                    <button class="btn btn-primary pomo-btn" id="pomo-start-btn"
+                            onclick="pomoStart()">▶ Start</button>
+                    <button class="btn btn-warning pomo-btn" id="pomo-pause-btn"
+                            onclick="pomoPause()" style="display:none;">⏸ Pause</button>
+                    <button class="btn btn-ghost pomo-btn"
+                            onclick="pomoReset()">↺ Reset</button>
+                </div>
+            </div>
+
+            <!-- Task selector -->
+            <div class="card pomo-task-card">
+                <label class="pomo-task-label" for="pomo-task-select">
+                    📌 Link to a task <span style="color:var(--text-secondary);font-weight:400;">(today's pending)</span>
+                </label>
+                <select id="pomo-task-select" onchange="onTaskSelected(this)">
+                    <option value="">— No task selected —</option>
+                </select>
+
+                <!-- Tomato count -->
+                <div class="pomo-tomatoes-wrap">
+                    <span class="pomo-tomatoes-heading">Pomodoros completed:</span>
+                    <div id="pomo-tomatoes" class="pomo-tomatoes"></div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ===== VIEW: ANALYTICS ===== -->
+        <section class="view" id="view-analytics">
+
+            <!-- Summary cards -->
+            <div class="stats-grid">
+                <div class="stat-card" style="border-top:3px solid var(--accent);">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="an-weekly-hours">—</span>
+                        <span class="stat-label">Study Hours (7 days)</span>
+                    </div>
+                </div>
+                <div class="stat-card" style="border-top:3px solid var(--success);">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-info">
+                        <span class="stat-value an-val-sm" id="an-best-day">—</span>
+                        <span class="stat-label">Best Day</span>
+                    </div>
+                </div>
+                <div class="stat-card" style="border-top:3px solid #a855f7;">
+                    <div class="stat-icon">📖</div>
+                    <div class="stat-info">
+                        <span class="stat-value an-val-sm" id="an-top-subject">—</span>
+                        <span class="stat-label">Most Studied</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bar chart -->
+            <div class="card an-chart-card">
+                <div class="card-header">
+                    <h3>📊 Study Hours by Subject</h3>
+                    <span class="badge">Completed tasks</span>
+                </div>
+                <div class="an-canvas-wrap">
+                    <canvas id="bar-chart-canvas" class="an-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Heatmap -->
+            <div class="card an-chart-card">
+                <div class="card-header">
+                    <h3>🗓️ Last 7 Days Activity</h3>
+                    <span class="badge">Tasks completed per day</span>
+                </div>
+                <div class="an-heatmap-wrap">
+                    <canvas id="heatmap-canvas" class="an-heatmap-canvas"></canvas>
+                </div>
+            </div>
+
+        </section>
     </main>
 </div>
 
@@ -168,8 +310,14 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="task-subject">Subject <span class="required">*</span></label>
-                    <input type="text" id="task-subject" placeholder="e.g. Mathematics" required />
+                    <label for="task-subject">
+                        Subject <span class="required">*</span>
+                    </label>
+                    <div class="subject-input-wrap">
+                        <span class="modal-subject-dot" id="modal-subject-dot" style="display:none;"></span>
+                        <input type="text" id="task-subject" placeholder="e.g. Mathematics" required
+                               oninput="updateModalSubjectDot()" />
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="task-date">Date <span class="required">*</span></label>
@@ -206,4 +354,7 @@
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 <script src="{{ url_for('static', filename='js/planner.js') }}"></script>
 <script src="{{ url_for('static', filename='js/reminder.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pomodoro.js') }}"></script>
+<script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+<script src="{{ url_for('static', filename='js/streak.js') }}"></script>
 {% endblock %}

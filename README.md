@@ -51,13 +51,27 @@ smart-study-planner/
 pip install -r requirements.txt
 ```
 
-### 2. Run the app
+### 2. Configure environment
+
+Copy the example environment file and set your secret key:
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env` and replace the placeholder with a strong secret key. Generate one with:
+
+```bash
+python -c "import secrets; print(secrets.token_hex(32))"
+```
+
+### 3. Run the app
 
 ```bash
 python app.py
 ```
 
-### 3. Open in browser
+### 4. Open in browser
 
 ```
 http://127.0.0.1:5000

@@ -95,6 +95,8 @@ const VIEW_TITLES = {
     dashboard: 'Dashboard',
     planner:   'Study Planner',
     tasks:     'All Tasks',
+    pomodoro:  '⏱️ Pomodoro',
+    analytics: '📈 Analytics',
 };
 
 function switchView(viewName, linkEl) {
@@ -120,6 +122,64 @@ function switchView(viewName, linkEl) {
     if (viewName === 'dashboard' && typeof loadDashboard === 'function') loadDashboard();
     if (viewName === 'planner'   && typeof loadPlannerView === 'function') loadPlannerView();
     if (viewName === 'tasks'     && typeof loadAllTasks === 'function') loadAllTasks();
+    if (viewName === 'pomodoro'  && typeof initPomodoro === 'function') initPomodoro();
+    if (viewName === 'analytics' && typeof initAnalytics === 'function') initAnalytics();
+}
+
+/* ------------------------------------------------------------------ */
+/*  Subject Color Coding                                                */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Predefined palette of 12 distinct colors.
+ * Colors are assigned to subjects in order of first appearance
+ * and persisted in localStorage under the key 'subject_colors'.
+ */
+const SUBJECT_COLOR_PALETTE = [
+    '#4f6ef7', '#22c55e', '#f59e0b', '#ef4444',
+    '#a855f7', '#06b6d4', '#f97316', '#ec4899',
+    '#14b8a6', '#8b5cf6', '#84cc16', '#e11d48',
+];
+
+/**
+ * Return a consistent hex color for a given subject string.
+ * Assigns a new palette color on first encounter and saves the mapping.
+ * @param {string} subject
+ * @returns {string} hex color, e.g. '#4f6ef7'
+ */
+function getSubjectColor(subject) {
+    if (!subject) return SUBJECT_COLOR_PALETTE[0];
+
+    // Load existing map from localStorage
+    let map = {};
+    try {
+        map = JSON.parse(localStorage.getItem('subject_colors') || '{}');
+    } catch { map = {}; }
+
+    const key = subject.trim().toLowerCase();
+
+    if (!map[key]) {
+        // Assign the next unused palette color (cycle if > 12 subjects)
+        const usedCount = Object.keys(map).length;
+        map[key] = SUBJECT_COLOR_PALETTE[usedCount % SUBJECT_COLOR_PALETTE.length];
+        localStorage.setItem('subject_colors', JSON.stringify(map));
+    }
+
+    return map[key];
+}
+
+/**
+ * Return a CSS rgba() string of the subject color at reduced opacity.
+ * Useful for backgrounds.
+ * @param {string} subject
+ * @param {number} alpha  0–1
+ */
+function getSubjectColorAlpha(subject, alpha = 0.15) {
+    const hex = getSubjectColor(subject).replace('#', '');
+    const r   = parseInt(hex.slice(0, 2), 16);
+    const g   = parseInt(hex.slice(2, 4), 16);
+    const b   = parseInt(hex.slice(4, 6), 16);
+    return `rgba(${r},${g},${b},${alpha})`;
 }
 
 /* ------------------------------------------------------------------ */
