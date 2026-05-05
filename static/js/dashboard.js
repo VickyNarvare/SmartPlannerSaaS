@@ -270,8 +270,8 @@ async function deleteTask(taskId) {
 
 function openModal(mode, taskId = null) {
     editingTaskId = taskId;
-    const overlay  = document.getElementById('modal-overlay');
-    const title    = document.getElementById('modal-title');
+    const overlay   = document.getElementById('modal-overlay');
+    const title     = document.getElementById('modal-title');
     const submitBtn = document.getElementById('modal-submit-btn');
 
     // Reset form
@@ -279,15 +279,17 @@ function openModal(mode, taskId = null) {
     document.getElementById('task-id').value = '';
 
     if (mode === 'add') {
-        title.textContent      = 'Add New Task';
-        submitBtn.textContent  = 'Add Task';
-        // Pre-fill today's date
+        title.textContent     = 'Add New Task';
+        submitBtn.textContent = 'Add Task';
         document.getElementById('task-date').value = todayStr();
     } else {
         title.textContent     = 'Edit Task';
         submitBtn.textContent = 'Save Changes';
-        // Populate form with existing task data
-        const task = allTasks.find(t => t.id === taskId);
+
+        // Coerce to number — HTML onclick passes strings, JSON returns numbers
+        const id   = Number(taskId);
+        const task = allTasks.find(t => Number(t.id) === id);
+
         if (task) {
             document.getElementById('task-id').value      = task.id;
             document.getElementById('task-subject').value = task.subject;
@@ -295,12 +297,26 @@ function openModal(mode, taskId = null) {
             document.getElementById('task-start').value   = task.start_time;
             document.getElementById('task-end').value     = task.end_time;
             document.getElementById('task-desc').value    = task.description || '';
+        } else {
+            // Task not in cache (e.g. opened from planner) — fetch it directly
+            fetchTasks().then(tasks => {
+                allTasks = tasks;
+                const t = tasks.find(t => Number(t.id) === id);
+                if (t) {
+                    document.getElementById('task-id').value      = t.id;
+                    document.getElementById('task-subject').value = t.subject;
+                    document.getElementById('task-date').value    = t.date;
+                    document.getElementById('task-start').value   = t.start_time;
+                    document.getElementById('task-end').value     = t.end_time;
+                    document.getElementById('task-desc').value    = t.description || '';
+                    updateModalSubjectDot();
+                }
+            });
         }
     }
 
     overlay.classList.add('open');
     document.getElementById('task-subject').focus();
-    // Sync color dot for whatever subject is already in the field
     updateModalSubjectDot();
 }
 

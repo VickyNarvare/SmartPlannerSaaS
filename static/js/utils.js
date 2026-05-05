@@ -97,6 +97,7 @@ const VIEW_TITLES = {
     tasks:     'All Tasks',
     pomodoro:  '⏱️ Pomodoro',
     analytics: '📈 Analytics',
+    streak:    '🔥 Streak',
 };
 
 function switchView(viewName, linkEl) {
@@ -124,6 +125,7 @@ function switchView(viewName, linkEl) {
     if (viewName === 'tasks'     && typeof loadAllTasks === 'function') loadAllTasks();
     if (viewName === 'pomodoro'  && typeof initPomodoro === 'function') initPomodoro();
     if (viewName === 'analytics' && typeof initAnalytics === 'function') initAnalytics();
+    if (viewName === 'streak'    && typeof initStreakView === 'function') initStreakView();
 }
 
 /* ------------------------------------------------------------------ */

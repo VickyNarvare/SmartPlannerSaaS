@@ -207,8 +207,14 @@ function onTimerEnd() {
         autoSwitchMode(pomoRound % 4 === 0 ? 'long' : 'short');
 
     } else if (pomoMode === 'custom') {
-        const msg = '⏱️ Custom timer finished!';
-        showToast(msg, 'success', 4000);
+        // Read the optional user message
+        const msgEl   = document.getElementById('custom-message');
+        const userMsg = msgEl ? msgEl.value.trim() : '';
+        const msg     = userMsg
+            ? `⏱️ Timer done! ${userMsg}`
+            : '⏱️ Custom timer finished!';
+
+        showToast(msg, 'success', 6000);
         firePomoNotification(msg);
         // Stay in custom mode, reset to same duration
         pomoTimeLeft = POMO_DURATIONS.custom;

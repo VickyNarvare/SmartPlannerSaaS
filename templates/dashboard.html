@@ -26,6 +26,9 @@
             <a href="#" class="nav-item" data-view="analytics" onclick="switchView('analytics', this)">
                 <span class="nav-icon">📈</span> Analytics
             </a>
+            <a href="#" class="nav-item" data-view="streak" onclick="switchView('streak', this)">
+                <span class="nav-icon">🔥</span> Streak
+            </a>
         </nav>
 
         <div class="sidebar-footer">
@@ -208,6 +211,8 @@
 
                 <!-- Custom timer input — shown only in custom mode -->
                 <div class="custom-timer-inputs" id="custom-timer-inputs" style="display:none;">
+
+                    <!-- Duration row -->
                     <div class="custom-timer-row">
                         <div class="custom-time-field">
                             <label for="custom-minutes">Min</label>
@@ -225,7 +230,19 @@
                         <button class="btn btn-ghost btn-sm custom-set-btn"
                                 onclick="applyCustomTimer()">Set</button>
                     </div>
-                    <p class="custom-timer-hint">Enter any duration and press Set</p>
+
+                    <!-- Optional reminder message -->
+                    <div class="custom-msg-row">
+                        <label for="custom-message">
+                            💬 Reminder message
+                            <span class="custom-msg-optional">(optional)</span>
+                        </label>
+                        <input type="text" id="custom-message"
+                               maxlength="80"
+                               placeholder="e.g. Take a deep breath, drink water…" />
+                    </div>
+
+                    <p class="custom-timer-hint">Set duration → press Start. Message shows when timer ends.</p>
                 </div>
 
                 <!-- Controls -->
@@ -306,6 +323,82 @@
                 <div class="an-heatmap-wrap">
                     <canvas id="heatmap-canvas" class="an-heatmap-canvas"></canvas>
                 </div>
+            </div>
+
+        </section>
+
+        <!-- ===== VIEW: STREAK ===== -->
+        <section class="view" id="view-streak">
+
+            <!-- Hero streak card -->
+            <div class="streak-hero card">
+                <div class="streak-flame-wrap">
+                    <span class="streak-flame" id="streak-flame-icon">🔥</span>
+                    <span class="streak-number" id="streak-hero-count">0</span>
+                </div>
+                <div class="streak-hero-info">
+                    <h2 id="streak-hero-label">Day Streak</h2>
+                    <p id="streak-hero-msg" class="streak-hero-msg"></p>
+                </div>
+            </div>
+
+            <!-- Streak stats row -->
+            <div class="stats-grid">
+                <div class="stat-card" style="border-top:3px solid #f97316;">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="sk-current">0</span>
+                        <span class="stat-label">Current Streak</span>
+                    </div>
+                </div>
+                <div class="stat-card" style="border-top:3px solid #a855f7;">
+                    <div class="stat-icon">🏅</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="sk-longest">0</span>
+                        <span class="stat-label">Longest Streak</span>
+                    </div>
+                </div>
+                <div class="stat-card" style="border-top:3px solid var(--success);">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="sk-total">0</span>
+                        <span class="stat-label">Tasks Completed</span>
+                    </div>
+                </div>
+                <div class="stat-card" style="border-top:3px solid var(--accent);">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="sk-active-days">0</span>
+                        <span class="stat-label">Active Days</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 30-day calendar heatmap -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>📅 Last 30 Days</h3>
+                    <span class="badge" id="sk-month-label"></span>
+                </div>
+                <div class="streak-calendar" id="streak-calendar"></div>
+                <div class="streak-calendar-legend">
+                    <span>Less</span>
+                    <span class="sk-legend-dot" style="background:var(--border);"></span>
+                    <span class="sk-legend-dot" style="background:#fdba74;"></span>
+                    <span class="sk-legend-dot" style="background:#fb923c;"></span>
+                    <span class="sk-legend-dot" style="background:#ea580c;"></span>
+                    <span class="sk-legend-dot" style="background:#9a3412;"></span>
+                    <span>More</span>
+                </div>
+            </div>
+
+            <!-- Badges wall -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>🏅 Badges</h3>
+                    <span class="badge" id="sk-badge-count"></span>
+                </div>
+                <div class="streak-badge-wall" id="streak-badge-wall"></div>
             </div>
 
         </section>

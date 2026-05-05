@@ -14,10 +14,10 @@
 /*  Badge definitions                                                   */
 /* ------------------------------------------------------------------ */
 const BADGES = [
-    { id: 'beginner',  icon: '🌱', label: 'Beginner',  desc: 'First task completed',    minStreak: 0, tasksNeeded: 1 },
-    { id: 'on_fire',   icon: '⚡', label: 'On Fire',   desc: '3-day streak',             minStreak: 3, tasksNeeded: 0 },
-    { id: 'champion',  icon: '🏆', label: 'Champion',  desc: '7-day streak',             minStreak: 7, tasksNeeded: 0 },
-    { id: 'legend',    icon: '💎', label: 'Legend',    desc: '30-day streak',            minStreak: 30, tasksNeeded: 0 },
+    { id: 'beginner',  icon: '🌱', label: 'Beginner',  desc: 'First task completed',  minStreak: 0,  tasksNeeded: 1  },
+    { id: 'on_fire',   icon: '⚡', label: 'On Fire',   desc: '3-day streak',           minStreak: 3,  tasksNeeded: 0  },
+    { id: 'champion',  icon: '🏆', label: 'Champion',  desc: '7-day streak',           minStreak: 7,  tasksNeeded: 0  },
+    { id: 'legend',    icon: '💎', label: 'Legend',    desc: '30-day streak',          minStreak: 30, tasksNeeded: 0  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -26,14 +26,19 @@ const BADGES = [
 
 function loadStreakData() {
     try {
-        return JSON.parse(localStorage.getItem('study_streak') || 'null') || {
-            streak:      0,
-            lastDate:    '',
-            totalDone:   0,
-            earnedBadges: [],
+        const raw  = localStorage.getItem('study_streak');
+        const data = JSON.parse(raw || 'null') || {};
+
+        /* Migrate / fill missing fields */
+        return {
+            streak:       data.streak       ?? 0,
+            longest:      data.longest      ?? 0,
+            lastDate:     data.lastDate     ?? '',
+            totalDone:    data.totalDone    ?? 0,
+            earnedBadges: data.earnedBadges ?? [],
         };
     } catch {
-        return { streak: 0, lastDate: '', totalDone: 0, earnedBadges: [] };
+        return { streak: 0, longest: 0, lastDate: '', totalDone: 0, earnedBadges: [] };
     }
 }
 
@@ -69,26 +74,39 @@ async function updateStreak() {
             return;
         }
 
-        /* Count consecutive days ending at the most recent date */
         const today     = todayStr();
         const yesterday = offsetDate(today, -1);
         const lastDate  = dates[dates.length - 1];
 
-        /* Streak is only "live" if last completed date is today or yesterday */
+        /* Streak is dead if the last completed day was before yesterday */
         if (lastDate < yesterday) {
             data.streak   = 0;
             data.lastDate = lastDate;
         } else {
-            let streak = 1;
+            /*
+             * Walk backward from the most recent date, counting
+             * consecutive days. Start anchor = lastDate (today or yesterday).
+             */
+            let streak  = 1;
+            let anchor  = lastDate;
+
             for (let i = dates.length - 2; i >= 0; i--) {
-                if (dates[i] === offsetDate(dates[i + 1], -1)) {
+                const expected = offsetDate(anchor, -1);
+                if (dates[i] === expected) {
                     streak++;
+                    anchor = dates[i];
                 } else {
                     break;
                 }
             }
+
             data.streak   = streak;
             data.lastDate = lastDate;
+        }
+
+        /* Track longest streak ever */
+        if (!data.longest || data.streak > data.longest) {
+            data.longest = data.streak;
         }
 
         /* Check for newly unlocked badges */
@@ -243,10 +261,10 @@ function offsetDate(dateStr, days) {
 /* ------------------------------------------------------------------ */
 
 document.addEventListener('DOMContentLoaded', () => {
-    /* Initial render from cached data (instant, no network) */
+    /* Render cached data instantly (no flicker) */
     renderStreakUI(loadStreakData());
 
-    /* Then fetch fresh data */
+    /* Always fetch fresh — this is the source of truth */
     updateStreak();
 
     /* Hook into task completion: patch the global toggleTaskStatus */
@@ -254,7 +272,155 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeof _origToggle === 'function') {
         window.toggleTaskStatus = async function(taskId, isChecked) {
             await _origToggle(taskId, isChecked);
-            if (isChecked) updateStreak();
+            /* Recalculate streak whenever a task is checked OR unchecked */
+            updateStreak();
         };
     }
 });
+
+/* ------------------------------------------------------------------ */
+/*  Streak view — full page render                                      */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Called by switchView('streak').
+ * Fetches completed tasks, renders hero, stats, 30-day calendar, badge wall.
+ */
+async function initStreakView() {
+    const data = loadStreakData();
+
+    // Render immediately from cache, then refresh
+    renderStreakHero(data);
+    renderStreakStats(data);
+    renderStreakBadgeWall(data);
+
+    try {
+        const res   = await fetch('/get-tasks?status=completed');
+        const tasks = await res.json();
+        renderStreakCalendar(tasks);
+        renderStreakStats({ ...data, activeDays: countActiveDays(tasks) });
+    } catch {
+        renderStreakCalendar([]);
+    }
+}
+
+/* ── Hero card ── */
+function renderStreakHero(data) {
+    const { streak } = data;
+
+    const icon  = document.getElementById('streak-flame-icon');
+    const count = document.getElementById('streak-hero-count');
+    const label = document.getElementById('streak-hero-label');
+    const msg   = document.getElementById('streak-hero-msg');
+
+    if (icon)  icon.textContent  = streak >= 7 ? '🔥' : streak >= 3 ? '⚡' : streak > 0 ? '✨' : '💤';
+    if (count) count.textContent = streak;
+    if (label) label.textContent = `Day Streak`;
+
+    const messages = [
+        [0,  '📚 Complete a task today to start your streak!'],
+        [1,  '✨ Great start! Keep going tomorrow.'],
+        [3,  '⚡ You\'re on fire! 3 days strong.'],
+        [7,  '🏆 One week! You\'re a champion.'],
+        [14, '🚀 Two weeks! Unstoppable.'],
+        [30, '💎 30 days! Absolute legend.'],
+    ];
+    let text = messages[0][1];
+    for (const [min, m] of messages) { if (streak >= min) text = m; }
+    if (msg) msg.textContent = text;
+}
+
+/* ── Stats row ── */
+function renderStreakStats(data) {
+    const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    setText('sk-current',     data.streak      || 0);
+    setText('sk-longest',     data.longest     || data.streak || 0);
+    setText('sk-total',       data.totalDone   || 0);
+    setText('sk-active-days', data.activeDays  || 0);
+}
+
+/* ── 30-day calendar heatmap ── */
+function renderStreakCalendar(tasks) {
+    const container = document.getElementById('streak-calendar');
+    const monthLbl  = document.getElementById('sk-month-label');
+    if (!container) return;
+
+    // Build date → count map for last 30 days
+    const days = [];
+    for (let i = 29; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        days.push(d.toISOString().split('T')[0]);
+    }
+
+    const countMap = {};
+    days.forEach(d => { countMap[d] = 0; });
+    tasks.forEach(t => { if (countMap[t.date] !== undefined) countMap[t.date]++; });
+
+    const maxCount = Math.max(...Object.values(countMap), 1);
+    const today    = todayStr();
+
+    if (monthLbl) {
+        const start = formatDate(days[0]);
+        const end   = formatDate(days[days.length - 1]);
+        monthLbl.textContent = `${start} – ${end}`;
+    }
+
+    container.innerHTML = '';
+
+    days.forEach(date => {
+        const count     = countMap[date];
+        const intensity = count / maxCount;
+        const isToday   = date === today;
+
+        const cell = document.createElement('div');
+        cell.className = 'sk-cal-cell';
+        cell.title     = `${formatDate(date)}: ${count} task${count !== 1 ? 's' : ''} completed`;
+
+        // Colour: empty = border, filled = orange gradient
+        if (count === 0) {
+            cell.style.background = 'var(--border)';
+        } else {
+            const alpha = 0.3 + intensity * 0.7;
+            cell.style.background = `rgba(249,115,22,${alpha.toFixed(2)})`;
+        }
+
+        if (isToday) cell.classList.add('sk-cal-today');
+        if (count > 0) {
+            cell.innerHTML = `<span class="sk-cal-count">${count}</span>`;
+        }
+
+        container.appendChild(cell);
+    });
+}
+
+/* ── Badge wall ── */
+function renderStreakBadgeWall(data) {
+    const wall     = document.getElementById('streak-badge-wall');
+    const countLbl = document.getElementById('sk-badge-count');
+    if (!wall) return;
+
+    const earned = data.earnedBadges || [];
+    if (countLbl) countLbl.textContent = `${earned.length} / ${BADGES.length}`;
+
+    wall.innerHTML = '';
+    BADGES.forEach(badge => {
+        const isEarned = earned.includes(badge.id);
+        const card     = document.createElement('div');
+        card.className = `sk-badge-card${isEarned ? ' earned' : ' locked'}`;
+        card.innerHTML = `
+            <div class="sk-badge-icon">${badge.icon}</div>
+            <div class="sk-badge-name">${badge.label}</div>
+            <div class="sk-badge-desc">${badge.desc}</div>
+            ${isEarned
+                ? '<div class="sk-badge-status earned-label">✅ Earned</div>'
+                : '<div class="sk-badge-status locked-label">🔒 Locked</div>'}
+        `;
+        wall.appendChild(card);
+    });
+}
+
+/* ── Helpers ── */
+function countActiveDays(tasks) {
+    return new Set(tasks.map(t => t.date)).size;
+}
