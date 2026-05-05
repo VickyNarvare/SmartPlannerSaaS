@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6e40c9"/>
+      <stop offset="100%" stop-color="#a371f7"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded square background -->
+  <rect width="64" height="64" rx="14" fill="url(#g)"/>
+  <!-- Open book shape -->
+  <path d="M12 20 Q12 16 16 16 L30 18 L30 48 L16 46 Q12 46 12 42 Z" fill="rgba(255,255,255,0.9)"/>
+  <path d="M52 20 Q52 16 48 16 L34 18 L34 48 L48 46 Q52 46 52 42 Z" fill="rgba(255,255,255,0.9)"/>
+  <!-- Spine line -->
+  <line x1="32" y1="18" x2="32" y2="48" stroke="rgba(110,64,201,0.4)" stroke-width="2"/>
+  <!-- Lines on left page -->
+  <line x1="17" y1="26" x2="28" y2="26.5" stroke="rgba(110,64,201,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="17" y1="31" x2="28" y2="31.5" stroke="rgba(110,64,201,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="17" y1="36" x2="28" y2="36.5" stroke="rgba(110,64,201,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Lines on right page -->
+  <line x1="36" y1="26.5" x2="47" y2="26" stroke="rgba(110,64,201,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="36" y1="31.5" x2="47" y2="31" stroke="rgba(110,64,201,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="36" y1="36.5" x2="47" y2="36" stroke="rgba(110,64,201,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

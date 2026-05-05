@@ -31,27 +31,6 @@ function showToast(message, type = 'info', duration = 3000) {
 /*  Dark / Light theme toggle                                           */
 /* ------------------------------------------------------------------ */
 
-function toggleTheme() {
-    const html = document.documentElement;
-    const isDark = html.getAttribute('data-theme') === 'dark';
-    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    localStorage.setItem('theme', isDark ? 'light' : 'dark');
-
-    const btn = document.getElementById('theme-toggle');
-    if (btn) btn.textContent = isDark ? '🌙' : '☀️';
-}
-
-/** Apply saved theme on page load. */
-(function applySavedTheme() {
-    const saved = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', saved);
-    // Update button icon once DOM is ready
-    document.addEventListener('DOMContentLoaded', () => {
-        const btn = document.getElementById('theme-toggle');
-        if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
-    });
-})();
-
 /* ------------------------------------------------------------------ */
 /*  Sidebar toggle (mobile)                                             */
 /* ------------------------------------------------------------------ */

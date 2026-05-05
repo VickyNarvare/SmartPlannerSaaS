@@ -6,28 +6,30 @@
 <div class="app-layout">
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <span class="brand-icon">📚</span>
+            <span class="brand-icon">
+                <img src="{{ url_for('static', filename='favicon.svg') }}" alt="StudyPlanner" width="28" height="28" />
+            </span>
             <span class="brand-name">StudyPlanner</span>
         </div>
 
         <nav class="sidebar-nav">
             <a href="#" class="nav-item active" data-view="dashboard" onclick="switchView('dashboard', this)">
-                <span class="nav-icon">📊</span> Dashboard
+                <span class="nav-icon"><i class="fa-solid fa-gauge-high"></i></span> Dashboard
             </a>
             <a href="#" class="nav-item" data-view="planner" onclick="switchView('planner', this)">
-                <span class="nav-icon">📅</span> Planner
+                <span class="nav-icon"><i class="fa-solid fa-calendar-days"></i></span> Planner
             </a>
             <a href="#" class="nav-item" data-view="tasks" onclick="switchView('tasks', this)">
-                <span class="nav-icon">✅</span> All Tasks
+                <span class="nav-icon"><i class="fa-solid fa-list-check"></i></span> All Tasks
             </a>
             <a href="#" class="nav-item" data-view="pomodoro" onclick="switchView('pomodoro', this)">
-                <span class="nav-icon">⏱️</span> Pomodoro
+                <span class="nav-icon"><i class="fa-solid fa-stopwatch"></i></span> Pomodoro
             </a>
             <a href="#" class="nav-item" data-view="analytics" onclick="switchView('analytics', this)">
-                <span class="nav-icon">📈</span> Analytics
+                <span class="nav-icon"><i class="fa-solid fa-chart-bar"></i></span> Analytics
             </a>
             <a href="#" class="nav-item" data-view="streak" onclick="switchView('streak', this)">
-                <span class="nav-icon">🔥</span> Streak
+                <span class="nav-icon"><i class="fa-solid fa-fire"></i></span> Streak
             </a>
         </nav>
 
@@ -39,7 +41,9 @@
                     <span class="sidebar-streak" id="sidebar-streak" style="display:none;"></span>
                 </div>
             </div>
-            <a href="/logout" class="btn btn-ghost btn-sm">Logout</a>
+            <a href="/logout" class="btn btn-ghost btn-sm">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
         </div>
     </aside>
 
@@ -47,11 +51,14 @@
     <main class="main-content">
         <!-- Top bar -->
         <header class="topbar">
-            <button class="hamburger" id="hamburger" aria-label="Toggle sidebar" onclick="toggleSidebar()">☰</button>
+            <button class="hamburger" id="hamburger" aria-label="Toggle sidebar" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
             <h2 class="topbar-title" id="topbar-title">Dashboard</h2>
             <div class="topbar-actions">
-                <button class="btn btn-primary btn-sm" onclick="openModal('add')">+ Add Task</button>
-                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" onclick="toggleTheme()">🌙</button>
+                <button class="btn btn-primary btn-sm" onclick="openModal('add')">
+                    <i class="fa-solid fa-plus"></i> Add Task
+                </button>
             </div>
         </header>
 
@@ -63,28 +70,28 @@
 
             <div class="stats-grid">
                 <div class="stat-card stat-total">
-                    <div class="stat-icon">📋</div>
+                    <div class="stat-icon"><i class="fa-solid fa-clipboard-list fa-xl"></i></div>
                     <div class="stat-info">
                         <span class="stat-value" id="stat-total">0</span>
                         <span class="stat-label">Total Tasks</span>
                     </div>
                 </div>
                 <div class="stat-card stat-completed">
-                    <div class="stat-icon">✅</div>
+                    <div class="stat-icon"><i class="fa-solid fa-circle-check fa-xl"></i></div>
                     <div class="stat-info">
                         <span class="stat-value" id="stat-completed">0</span>
                         <span class="stat-label">Completed</span>
                     </div>
                 </div>
                 <div class="stat-card stat-pending">
-                    <div class="stat-icon">⏳</div>
+                    <div class="stat-icon"><i class="fa-solid fa-clock fa-xl"></i></div>
                     <div class="stat-info">
                         <span class="stat-value" id="stat-pending">0</span>
                         <span class="stat-label">Pending</span>
                     </div>
                 </div>
                 <div class="stat-card stat-percent">
-                    <div class="stat-icon">🎯</div>
+                    <div class="stat-icon"><i class="fa-solid fa-bullseye fa-xl"></i></div>
                     <div class="stat-info">
                         <span class="stat-value" id="stat-percent">0%</span>
                         <span class="stat-label">Completion Rate</span>
@@ -410,7 +417,9 @@
     <div class="modal">
         <div class="modal-header">
             <h3 id="modal-title">Add Task</h3>
-            <button class="modal-close" aria-label="Close modal" onclick="closeModal()">✕</button>
+            <button class="modal-close" aria-label="Close modal" onclick="closeModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
         <form id="task-form" class="modal-body" novalidate>
             <input type="hidden" id="task-id" />

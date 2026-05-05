@@ -81,18 +81,45 @@ function updateStats(tasks) {
     const pending   = total - completed;
     const pct       = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-    setText('stat-total',     total);
-    setText('stat-completed', completed);
-    setText('stat-pending',   pending);
-    setText('stat-percent',   `${pct}%`);
+    // Animated counter for each stat
+    animateCounter('stat-total',     total);
+    animateCounter('stat-completed', completed);
+    animateCounter('stat-pending',   pending);
+    animateCounter('stat-percent',   pct, '%');
 
-    // Progress bar
-    const bar   = document.getElementById('progress-bar');
-    const lbl   = document.getElementById('progress-label');
-    const wrap  = document.getElementById('progress-bar-wrap');
-    if (bar)  bar.style.width  = `${pct}%`;
-    if (lbl)  lbl.textContent  = `${pct}%`;
+    // Progress bar — animate width after a short delay
+    const bar  = document.getElementById('progress-bar');
+    const lbl  = document.getElementById('progress-label');
+    const wrap = document.getElementById('progress-bar-wrap');
+    if (bar)  { bar.style.width = '0%'; setTimeout(() => { bar.style.width = `${pct}%`; }, 120); }
+    if (lbl)  lbl.textContent = `${pct}%`;
     if (wrap) wrap.setAttribute('aria-valuenow', pct);
+}
+
+/**
+ * Animate a number counting up from 0 to `target`.
+ * @param {string} id       - Element id
+ * @param {number} target   - Final value
+ * @param {string} suffix   - Optional suffix e.g. '%'
+ */
+function animateCounter(id, target, suffix = '') {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const duration = 700;   // ms
+    const start    = performance.now();
+    const from     = 0;
+
+    function step(now) {
+        const elapsed  = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease-out cubic
+        const eased    = 1 - Math.pow(1 - progress, 3);
+        const current  = Math.round(from + (target - from) * eased);
+        el.textContent = current + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
 }
 
 function setText(id, value) {
@@ -103,13 +130,15 @@ function setText(id, value) {
 /** Render today's tasks in the dashboard. */
 function renderTodayTasks(tasks) {
     const today = todayStr();
-    const todayTasks = tasks.filter(t => t.date === today);
+    const todayTasks = tasks
+        .filter(t => t.date === today)
+        .sort((a, b) => a.start_time.localeCompare(b.start_time));
     const container  = document.getElementById('today-tasks-list');
     if (!container) return;
     container.innerHTML = '';
 
     if (todayTasks.length === 0) {
-        container.innerHTML = emptyState('No tasks scheduled for today.');
+        container.innerHTML = emptyState('No tasks scheduled for today.', '📭', 'Add one now', () => openModal('add'));
         return;
     }
     todayTasks.forEach(t => container.appendChild(buildTaskItem(t)));
@@ -128,7 +157,7 @@ function renderUpcomingTasks(tasks) {
     container.innerHTML = '';
 
     if (upcoming.length === 0) {
-        container.innerHTML = emptyState('No upcoming tasks.');
+        container.innerHTML = emptyState('No upcoming tasks.', '🗓️');
         return;
     }
     upcoming.forEach(t => container.appendChild(buildTaskItem(t)));
@@ -210,8 +239,12 @@ function buildTaskItem(task) {
             ${task.description ? `<div class="task-desc">${escHtml(task.description)}</div>` : ''}
         </div>
         <div class="task-actions">
-            <button class="btn-icon" title="Edit task" onclick="openModal('edit', ${task.id})">✏️</button>
-            <button class="btn-icon" title="Delete task" onclick="deleteTask(${task.id})">🗑️</button>
+            <button class="btn-icon" title="Edit task" onclick="openModal('edit', ${task.id})">
+                <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button class="btn-icon" title="Delete task" onclick="deleteTask(${task.id})">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
         </div>
     `;
     return item;

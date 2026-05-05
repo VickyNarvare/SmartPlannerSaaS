@@ -1,40 +1,40 @@
 /* ============================================================
-   Smart Study Planner – Main Stylesheet  v2
-   Refined UI: better hierarchy, spacing, depth & polish
+   Smart Study Planner – Main Stylesheet  v3  (Deep Space Theme)
+   Premium dark UI — all JS functionality unchanged
    ============================================================ */
 
-/* ---------- CSS Variables (Light theme) ---------- */
+/* ---------- CSS Variables — Deep Space (default / dark) ---------- */
 :root {
-    --bg-primary:    #f4f6fb;
-    --bg-secondary:  #ffffff;
-    --bg-sidebar:    #16213e;
-    --bg-card:       #ffffff;
+    --bg-primary:    #0d1117;
+    --bg-secondary:  #161b22;
+    --bg-sidebar:    #0d1117;
+    --bg-card:       #161b22;
 
-    --text-primary:  #0f172a;
-    --text-secondary:#64748b;
-    --text-sidebar:  #94a3b8;
+    --text-primary:  #e6edf3;
+    --text-secondary:#8b949e;
+    --text-sidebar:  #8b949e;
     --text-on-accent:#ffffff;
 
-    --accent:        #4f6ef7;
-    --accent-hover:  #3a57e8;
-    --accent-light:  #eef1ff;
-    --accent-glow:   rgba(79,110,247,.18);
+    --accent:        #6e40c9;
+    --accent-hover:  #8957e5;
+    --accent-light:  #1f1535;
+    --accent-glow:   rgba(110,64,201,.22);
 
-    --success:       #16a34a;
-    --success-light: #dcfce7;
-    --warning:       #d97706;
-    --warning-light: #fef3c7;
-    --danger:        #dc2626;
-    --danger-light:  #fee2e2;
+    --success:       #3fb950;
+    --success-light: #052e16;
+    --warning:       #d29922;
+    --warning-light: #2d1b00;
+    --danger:        #f85149;
+    --danger-light:  #3d0c09;
 
-    --border:        #e2e8f0;
-    --border-focus:  rgba(79,110,247,.4);
+    --border:        #30363d;
+    --border-focus:  rgba(110,64,201,.55);
 
-    --shadow-xs: 0 1px 2px rgba(0,0,0,.05);
-    --shadow-sm: 0 1px 4px rgba(0,0,0,.07), 0 2px 8px rgba(0,0,0,.05);
-    --shadow-md: 0 4px 12px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06);
-    --shadow-lg: 0 8px 24px rgba(0,0,0,.10), 0 20px 48px rgba(0,0,0,.08);
-    --shadow-accent: 0 4px 16px rgba(79,110,247,.3);
+    --shadow-xs: 0 1px 2px rgba(0,0,0,.4);
+    --shadow-sm: 0 1px 4px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.4);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.6), 0 8px 24px rgba(0,0,0,.5);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,.7), 0 20px 48px rgba(0,0,0,.6);
+    --shadow-accent: 0 4px 20px rgba(110,64,201,.4);
 
     --radius-xs: 4px;
     --radius-sm: 8px;
@@ -48,31 +48,7 @@
     --transition-slow: .35s ease;
 }
 
-/* ---------- Dark theme ---------- */
-[data-theme="dark"] {
-    --bg-primary:    #0b1120;
-    --bg-secondary:  #131d35;
-    --bg-sidebar:    #080e1c;
-    --bg-card:       #131d35;
-
-    --text-primary:  #e2e8f0;
-    --text-secondary:#94a3b8;
-    --text-sidebar:  #64748b;
-
-    --accent-light:  #1a2550;
-    --accent-glow:   rgba(79,110,247,.12);
-    --success-light: #052e16;
-    --warning-light: #431407;
-    --danger-light:  #3f0808;
-
-    --border:        #1e2d45;
-    --border-focus:  rgba(79,110,247,.5);
-
-    --shadow-xs: 0 1px 2px rgba(0,0,0,.4);
-    --shadow-sm: 0 1px 4px rgba(0,0,0,.4), 0 2px 8px rgba(0,0,0,.3);
-    --shadow-md: 0 4px 12px rgba(0,0,0,.5), 0 8px 24px rgba(0,0,0,.4);
-    --shadow-lg: 0 8px 24px rgba(0,0,0,.6), 0 20px 48px rgba(0,0,0,.5);
-}
+/* Light theme removed — app uses Deep Space dark permanently */
 
 /* ---------- Reset & Base ---------- */
 *,
@@ -328,12 +304,25 @@ textarea { resize: none; min-height: 80px; }
 .btn:active { transform: scale(.96); }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--accent), #6366f1);
+    background: linear-gradient(135deg, #6e40c9, #a371f7);
     color: #fff;
-    box-shadow: 0 2px 8px rgba(79,110,247,.3);
+    box-shadow: 0 2px 8px rgba(110,64,201,.35);
+    position: relative;
+    overflow: hidden;
+}
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.15) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform .5s ease;
+}
+.btn-primary:hover::after {
+    transform: translateX(100%);
 }
 .btn-primary:hover {
-    background: linear-gradient(135deg, var(--accent-hover), #4f46e5);
+    background: linear-gradient(135deg, #8957e5, #a371f7);
     box-shadow: var(--shadow-accent);
     transform: translateY(-1px);
 }
@@ -469,7 +458,10 @@ textarea { resize: none; min-height: 80px; }
 .sidebar-brand .brand-name {
     font-size: 1.05rem;
     font-weight: 800;
-    color: #fff;
+    background: linear-gradient(135deg, #a371f7, #6e40c9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     letter-spacing: -.01em;
 }
 
@@ -504,20 +496,16 @@ textarea { resize: none; min-height: 80px; }
 }
 
 .nav-item.active {
-    background: linear-gradient(135deg, rgba(79,110,247,.3), rgba(99,102,241,.2));
+    background: linear-gradient(90deg, rgba(110,64,201,.25), rgba(110,64,201,.08));
     color: #fff;
     text-decoration: none;
-    box-shadow: inset 0 0 0 1px rgba(79,110,247,.3);
+    box-shadow: inset 3px 0 0 var(--accent),
+                0 0 20px rgba(110,64,201,.12);
 }
 
-/* Active indicator bar */
+/* Active indicator bar — replaced by inset box-shadow above */
 .nav-item.active::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 20%; bottom: 20%;
-    width: 3px;
-    background: var(--accent);
-    border-radius: 0 3px 3px 0;
+    display: none;
 }
 
 .nav-icon { font-size: 1.1rem; }
@@ -568,7 +556,9 @@ textarea { resize: none; min-height: 80px; }
     gap: 1rem;
     padding: 0 1.75rem;
     height: var(--topbar-h);
-    background: var(--bg-card);
+    background: rgba(13,17,23,.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
@@ -1937,3 +1927,1000 @@ textarea { resize: none; min-height: 80px; }
     .streak-number      { font-size: 2.2rem; }
     .streak-flame       { font-size: 2.8rem; }
 }
+
+/* ============================================================
+   UI IMPROVEMENTS v3
+   ============================================================ */
+
+/* ── 1. Skeleton loader for async content ── */
+@keyframes skeletonPulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: .4; }
+}
+
+.skeleton {
+    background: var(--border);
+    border-radius: var(--radius-sm);
+    animation: skeletonPulse 1.4s ease infinite;
+    pointer-events: none;
+}
+
+.skeleton-line {
+    height: 14px;
+    margin-bottom: .6rem;
+    border-radius: 99px;
+}
+
+.skeleton-line.short  { width: 40%; }
+.skeleton-line.medium { width: 65%; }
+.skeleton-line.full   { width: 100%; }
+
+.skeleton-card {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+/* ── 2. Date group headers in All Tasks ── */
+.task-date-header {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .6rem 0 .4rem;
+    margin-top: .5rem;
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.task-date-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+/* ── 3. Task description truncation ── */
+.task-desc {
+    font-size: .8rem;
+    color: var(--text-secondary);
+    margin-top: .35rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ── 4. Task actions always visible on touch, hover on desktop ── */
+@media (hover: none) {
+    .task-actions { opacity: 1 !important; }
+}
+
+/* ── 5. Topbar title truncation ── */
+.topbar-title {
+    flex: 1;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── 6. Improved filter row alignment ── */
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+.filter-row .btn {
+    margin-bottom: 0;
+    align-self: flex-end;
+    flex-shrink: 0;
+}
+
+/* ── 7. Loading spinner ── */
+.spinner-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+}
+
+.spinner {
+    width: 32px; height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── 8. Stat card number counter animation ── */
+.stat-value {
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+
+.stat-value.bump {
+    transform: scale(1.18);
+}
+
+/* ── 9. Task item completed strikethrough animation ── */
+.task-item.completing .task-subject {
+    animation: strikeThrough .35s ease forwards;
+}
+
+@keyframes strikeThrough {
+    from { text-decoration: none; opacity: 1; }
+    to   { text-decoration: line-through; opacity: .65; }
+}
+
+/* ── 10. Improved empty state ── */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .75rem;
+}
+
+.empty-state .empty-icon {
+    font-size: 3rem;
+    opacity: .5;
+    display: block;
+    filter: grayscale(.3);
+}
+
+.empty-state p {
+    font-size: .9rem;
+    max-width: 260px;
+    line-height: 1.5;
+}
+
+.empty-state .btn {
+    margin-top: .5rem;
+}
+
+/* ── 11. Smooth view transitions ── */
+.view {
+    animation: none;
+}
+
+.view.active {
+    animation: viewEnter .22s ease both;
+}
+
+@keyframes viewEnter {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── 12. Card hover lift (subtle) ── */
+.card {
+    transition: box-shadow var(--transition);
+}
+
+/* ── 13. Better progress bar label on small screens ── */
+@media (max-width: 400px) {
+    .progress-label { display: none; }
+}
+
+/* ── 14. Improved modal on mobile ── */
+@media (max-width: 520px) {
+    .modal {
+        border-radius: var(--radius-md) var(--radius-md) 0 0;
+        position: fixed;
+        bottom: 0;
+        left: 0; right: 0;
+        max-width: 100%;
+        animation: slideUpModal .28s cubic-bezier(.34,1.2,.64,1);
+    }
+
+    .modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    @keyframes slideUpModal {
+        from { transform: translateY(100%); }
+        to   { transform: translateY(0); }
+    }
+}
+
+/* ── 15. Pomodoro ring pulse when running ── */
+.pomo-ring.running {
+    filter: drop-shadow(0 0 6px currentColor);
+}
+
+/* ── 16. Sidebar nav section divider ── */
+.nav-divider {
+    height: 1px;
+    background: rgba(255,255,255,.06);
+    margin: .5rem .75rem;
+}
+
+/* ── 17. Topbar Add Task button pulse on empty state ── */
+.btn-primary.pulse {
+    animation: btnPulse 1.5s ease infinite;
+}
+
+@keyframes btnPulse {
+    0%, 100% { box-shadow: 0 2px 8px rgba(79,110,247,.3); }
+    50%       { box-shadow: 0 4px 20px rgba(79,110,247,.6); }
+}
+
+/* ── 18. Task item — better completed visual ── */
+.task-item.completed {
+    opacity: .58;
+    background: var(--bg-primary);
+}
+
+.task-item.completed .task-subject {
+    color: var(--text-secondary);
+}
+
+/* ── 19. Streak calendar tooltip ── */
+.sk-cal-cell {
+    position: relative;
+}
+
+.sk-cal-cell::after {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text-primary);
+    color: var(--bg-card);
+    font-size: .68rem;
+    font-weight: 600;
+    padding: .25rem .5rem;
+    border-radius: var(--radius-xs);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .15s ease;
+    z-index: 10;
+}
+
+.sk-cal-cell:hover::after {
+    opacity: 1;
+}
+
+/* ── 20. Weekly planner — horizontal scroll indicator ── */
+.weekly-grid-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: .5rem;
+}
+
+/* ── 21. Planner timeline — time gutter line ── */
+.timeline-slot::before {
+    content: '';
+    position: absolute;
+    left: 64px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    transform: translateY(-50%);
+}
+
+.timeline-slot {
+    position: relative;
+}
+
+/* ── 22. Badge popup — better mobile position ── */
+@media (max-width: 480px) {
+    .badge-popup {
+        right: .5rem;
+        bottom: 1rem;
+        left: .5rem;
+    }
+
+    .badge-popup-inner {
+        min-width: unset;
+        width: 100%;
+    }
+}
+
+/* ── 23. Scrollable task lists with max-height ── */
+#today-tasks-list,
+#upcoming-tasks-list {
+    max-height: 420px;
+    overflow-y: auto;
+    padding-right: .25rem;
+}
+
+/* ── 24. Focus-visible ring for keyboard nav ── */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ── 25. Smooth checkbox transition ── */
+.task-checkbox {
+    transition: accent-color var(--transition), transform .15s ease;
+}
+
+.task-checkbox:active {
+    transform: scale(.85);
+}
+
+/* ============================================================
+   DEEP SPACE REDESIGN — Full Premium Override
+   ============================================================ */
+
+/* ── Core keyframes ── */
+@keyframes deepShimmer {
+    0%   { transform: translateX(-100%) skewX(-15deg); }
+    100% { transform: translateX(250%)  skewX(-15deg); }
+}
+
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(110,64,201,.4); }
+    50%       { box-shadow: 0 0 22px rgba(110,64,201,.8); }
+}
+
+@keyframes dotPulse {
+    0%, 100% { transform: scale(1);   opacity: 1; }
+    50%       { transform: scale(1.5); opacity: .7; }
+}
+
+@keyframes borderGlow {
+    0%   { border-left-color: #6e40c9; }
+    33%  { border-left-color: #a371f7; }
+    66%  { border-left-color: #8957e5; }
+    100% { border-left-color: #6e40c9; }
+}
+
+@keyframes checkGlow {
+    0%   { box-shadow: 0 0 0 0 rgba(63,185,80,.6); }
+    70%  { box-shadow: 0 0 0 8px rgba(63,185,80,0); }
+    100% { box-shadow: 0 0 0 0 rgba(63,185,80,0); }
+}
+
+/* ── Sidebar — Deep Space ── */
+.sidebar {
+    background: #0d1117;
+    border-right: 1px solid #21262d;
+}
+
+.sidebar::before {
+    background: linear-gradient(180deg, rgba(110,64,201,.08) 0%, transparent 50%);
+}
+
+.sidebar-brand {
+    border-bottom: 1px solid #21262d;
+    padding: 1.5rem 1.25rem 1.25rem;
+}
+
+.sidebar-brand .brand-icon {
+    filter: drop-shadow(0 0 8px rgba(110,64,201,.7));
+}
+
+.sidebar-brand .brand-name {
+    background: linear-gradient(135deg, #a371f7 0%, #6e40c9 50%, #8957e5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -.01em;
+}
+
+/* Nav items — colored icon pills */
+.nav-item {
+    border-radius: var(--radius-sm);
+    padding: .7rem 1rem;
+    gap: .85rem;
+    transition: background var(--transition), transform var(--transition);
+}
+
+.nav-item .nav-icon {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .95rem;
+    flex-shrink: 0;
+    transition: transform var(--transition);
+}
+
+/* Each nav item gets a unique icon pill color */
+.nav-item[data-view="dashboard"] .nav-icon { background: rgba(110,64,201,.25); }
+.nav-item[data-view="planner"]   .nav-icon { background: rgba(56,189,248,.2);  }
+.nav-item[data-view="tasks"]     .nav-icon { background: rgba(63,185,80,.2);   }
+.nav-item[data-view="pomodoro"]  .nav-icon { background: rgba(249,115,22,.2);  }
+.nav-item[data-view="analytics"] .nav-icon { background: rgba(163,113,247,.2); }
+.nav-item[data-view="streak"]    .nav-icon { background: rgba(210,153,34,.2);  }
+
+.nav-item.active .nav-icon,
+.nav-item:hover  .nav-icon { transform: scale(1.1); }
+
+.nav-item.active {
+    background: linear-gradient(90deg, rgba(110,64,201,.22), rgba(110,64,201,.06));
+    color: #e6edf3;
+    box-shadow: inset 3px 0 0 #6e40c9, 0 0 16px rgba(110,64,201,.1);
+}
+
+.nav-item:hover:not(.active) {
+    background: rgba(255,255,255,.05);
+    color: #c9d1d9;
+    transform: translateX(3px);
+}
+
+/* Sidebar streak — orange glow */
+.sidebar-streak {
+    font-size: .75rem;
+    font-weight: 700;
+    color: #fb923c;
+    text-shadow: 0 0 8px rgba(251,146,60,.6);
+    letter-spacing: .01em;
+}
+
+/* ── Topbar ── */
+.topbar {
+    background: rgba(13,17,23,.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #21262d;
+}
+
+/* ── Stat cards — gradient + glow ── */
+.stat-total     { background: linear-gradient(135deg, #1f2937 0%, #111827 100%) !important; }
+.stat-completed { background: linear-gradient(135deg, #052e16 0%, #0f2419 100%) !important; }
+.stat-pending   { background: linear-gradient(135deg, #451a03 0%, #2d1200 100%) !important; }
+.stat-percent   { background: linear-gradient(135deg, #1f1535 0%, #130d2e 100%) !important; }
+
+/* Glowing top gradient line via ::before */
+.stat-total::before,
+.stat-completed::before,
+.stat-pending::before,
+.stat-percent::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    pointer-events: none;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+.stat-total::before     { background: linear-gradient(90deg, transparent, #6e40c9, transparent); }
+.stat-completed::before { background: linear-gradient(90deg, transparent, #3fb950, transparent); }
+.stat-pending::before   { background: linear-gradient(90deg, transparent, #d29922, transparent); }
+.stat-percent::before   { background: linear-gradient(90deg, transparent, #a371f7, transparent); }
+
+/* Glow blob ::after */
+.stat-total::after     { background: #6e40c9 !important; opacity: .18 !important; }
+.stat-completed::after { background: #3fb950 !important; opacity: .18 !important; }
+.stat-pending::after   { background: #d29922 !important; opacity: .18 !important; }
+.stat-percent::after   { background: #a371f7 !important; opacity: .18 !important; }
+
+.stat-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: var(--shadow-md), 0 0 24px rgba(110,64,201,.25) !important;
+}
+
+/* ── Progress bar — 28px + shimmer ── */
+.progress-bar-wrap {
+    height: 28px !important;
+    background: #21262d !important;
+    border: 1px solid #30363d !important;
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #6e40c9, #8957e5, #a371f7) !important;
+    transition: width .8s cubic-bezier(.4,0,.2,1) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 60px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+    animation: deepShimmer 2s ease infinite;
+}
+
+/* ── Task items — glassmorphism + glow borders ── */
+.task-item {
+    background: rgba(22,27,34,.7) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid #30363d !important;
+    border-left-width: 4px !important;
+    transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease !important;
+}
+
+.task-item:hover {
+    transform: translateY(-2px) translateX(2px) !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4), 0 0 16px rgba(110,64,201,.15) !important;
+    border-color: #6e40c9 !important;
+}
+
+/* Completed tasks — green left glow */
+.task-item.completed {
+    border-left-color: #3fb950 !important;
+    box-shadow: -2px 0 8px rgba(63,185,80,.25) !important;
+    opacity: .6 !important;
+}
+
+/* Pending tasks — orange left glow (applied via JS subject color, but fallback) */
+.task-item:not(.completed) {
+    box-shadow: -2px 0 6px rgba(110,64,201,.2) !important;
+}
+
+/* Subject dot — pulse animation */
+.subject-dot {
+    animation: dotPulse 2.5s ease-in-out infinite;
+    box-shadow: 0 0 0 2px rgba(255,255,255,.1) !important;
+}
+
+/* Custom checkbox — circle + green glow on check */
+.task-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50% !important;
+    border: 2px solid #30363d !important;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    transition: border-color .15s ease, background .15s ease;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.task-checkbox:checked {
+    background: #3fb950 !important;
+    border-color: #3fb950 !important;
+    animation: checkGlow .4s ease forwards;
+}
+
+.task-checkbox:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: .65rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.task-checkbox:hover:not(:checked) {
+    border-color: #6e40c9 !important;
+    box-shadow: 0 0 0 3px rgba(110,64,201,.2);
+}
+
+/* ── Motivational banner ── */
+.motivational-banner {
+    background: linear-gradient(135deg, #1f1535, #161b22) !important;
+    border: 1px solid #30363d !important;
+    border-left: 4px solid #6e40c9 !important;
+    animation: borderGlow 4s ease infinite, fadeIn .35s ease !important;
+    color: #e6edf3 !important;
+}
+
+/* ── Cards ── */
+.card {
+    background: var(--bg-card);
+    border: 1px solid #21262d;
+}
+
+/* ── Modal ── */
+.modal {
+    background: #161b22;
+    border: 1px solid #30363d;
+}
+
+.modal-header {
+    background: #0d1117;
+    border-bottom: 1px solid #21262d;
+}
+
+/* ── Buttons ── */
+.btn-primary {
+    background: linear-gradient(135deg, #6e40c9, #a371f7) !important;
+    box-shadow: 0 2px 12px rgba(110,64,201,.4) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 40px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.2), transparent);
+    transform: translateX(-100%) skewX(-15deg);
+    transition: none;
+}
+
+.btn-primary:hover::after {
+    animation: deepShimmer .6s ease forwards;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #8957e5, #a371f7) !important;
+    box-shadow: 0 4px 20px rgba(110,64,201,.6) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* ── Form inputs ── */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #6e40c9 !important;
+    box-shadow: 0 0 0 3px rgba(110,64,201,.2) !important;
+}
+
+/* ── Badges ── */
+.badge {
+    background: rgba(110,64,201,.2) !important;
+    color: #a371f7 !important;
+    border: 1px solid rgba(110,64,201,.3);
+}
+
+.badge-success {
+    background: rgba(63,185,80,.15) !important;
+    color: #3fb950 !important;
+    border: 1px solid rgba(63,185,80,.3);
+}
+
+.badge-warning {
+    background: rgba(210,153,34,.15) !important;
+    color: #d29922 !important;
+    border: 1px solid rgba(210,153,34,.3);
+}
+
+/* ── Toast ── */
+.toast {
+    background: #161b22 !important;
+    border: 1px solid #30363d !important;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar-thumb { background: #30363d; }
+::-webkit-scrollbar-track { background: #0d1117; }
+
+/* ── Planner timeline bars ── */
+.timeline-bar {
+    border-left-width: 4px !important;
+}
+
+/* ── Weekly day header today ── */
+.weekly-day-header.today {
+    background: linear-gradient(135deg, #6e40c9, #8957e5) !important;
+}
+
+/* ── Pomodoro ring glow ── */
+.pomo-ring {
+    filter: drop-shadow(0 0 6px currentColor);
+}
+
+/* ── Streak hero ── */
+.streak-hero {
+    background: linear-gradient(135deg, #1f1535, #161b22) !important;
+    border-top: 2px solid #6e40c9 !important;
+}
+
+/* ── Auth page ── */
+.auth-wrapper {
+    background: linear-gradient(145deg, #0d1117 0%, #1f1535 50%, #0d1117 100%) !important;
+}
+
+.auth-card {
+    background: rgba(22,27,34,.97) !important;
+    border: 1px solid #30363d !important;
+}
+
+/* ── Sidebar footer ── */
+.sidebar-footer {
+    border-top: 1px solid #21262d;
+}
+
+/* ── User avatar ── */
+.user-avatar {
+    background: linear-gradient(135deg, #6e40c9, #a371f7) !important;
+    box-shadow: 0 0 12px rgba(110,64,201,.5) !important;
+}
+
+/* ── Tab buttons ── */
+.tab-btn.active,
+.tab-btn:hover {
+    background: linear-gradient(135deg, #6e40c9, #8957e5) !important;
+    border-color: transparent !important;
+    box-shadow: 0 2px 12px rgba(110,64,201,.4) !important;
+}
+
+/* ── Pomo tabs ── */
+.pomo-tab.active {
+    background: linear-gradient(135deg, #6e40c9, #8957e5) !important;
+    border-color: transparent !important;
+    box-shadow: 0 2px 12px rgba(110,64,201,.4) !important;
+}
+
+/* ── Stat card staggered entrance ── */
+.stats-grid .stat-card:nth-child(1) { animation-delay: .05s !important; }
+.stats-grid .stat-card:nth-child(2) { animation-delay: .15s !important; }
+.stats-grid .stat-card:nth-child(3) { animation-delay: .25s !important; }
+.stats-grid .stat-card:nth-child(4) { animation-delay: .35s !important; }
+
+/* ── View entrance ── */
+.view.active {
+    animation: viewEnter .25s ease both !important;
+}
+
+/* ── Empty state ── */
+.empty-state .empty-icon { opacity: .4; }
+
+/* ── Sidebar nav divider ── */
+.sidebar-nav::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: #21262d;
+    margin: .5rem 0;
+}
+
+/* ============================================================
+   SVG ICON SYSTEM
+   ============================================================ */
+
+/* Base icon size — inherits color from parent */
+.icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+    stroke: currentColor;
+    fill: none;
+    pointer-events: none;
+}
+
+/* Larger icons for stat cards */
+.icon-lg {
+    width: 28px;
+    height: 28px;
+}
+
+/* Stat card icon container — colored per card */
+.stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+}
+
+.stat-total     .stat-icon { background: rgba(110,64,201,.2); color: #a371f7; }
+.stat-completed .stat-icon { background: rgba(63,185,80,.2);  color: #3fb950; }
+.stat-pending   .stat-icon { background: rgba(210,153,34,.2); color: #d29922; }
+.stat-percent   .stat-icon { background: rgba(163,113,247,.2);color: #a371f7; }
+
+/* Nav icon pill sizing */
+.nav-item .nav-icon {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+/* Nav icon SVG color per item */
+.nav-item[data-view="dashboard"] .nav-icon { color: #a371f7; }
+.nav-item[data-view="planner"]   .nav-icon { color: #38bdf8; }
+.nav-item[data-view="tasks"]     .nav-icon { color: #3fb950; }
+.nav-item[data-view="pomodoro"]  .nav-icon { color: #f97316; }
+.nav-item[data-view="analytics"] .nav-icon { color: #a371f7; }
+.nav-item[data-view="streak"]    .nav-icon { color: #d29922; }
+
+.nav-item.active .nav-icon { color: #fff; }
+
+/* Brand icon — no filter needed, using img */
+.sidebar-brand .brand-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 0 8px rgba(110,64,201,.7));
+}
+
+/* Theme toggle button — icon only */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    color: var(--text-secondary);
+}
+
+.theme-toggle:hover { color: var(--accent); }
+
+/* Hamburger button */
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-primary);
+    padding: .3rem;
+    border-radius: var(--radius-sm);
+    align-items: center;
+    justify-content: center;
+}
+
+.hamburger:hover { background: var(--bg-primary); }
+
+/* Task action buttons with SVG */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+
+.btn-icon:hover { color: var(--text-primary); transform: scale(1.1); }
+
+/* Edit button — blue on hover */
+.btn-icon[title="Edit task"]:hover   { color: var(--accent); background: var(--accent-light); }
+/* Delete button — red on hover */
+.btn-icon[title="Delete task"]:hover { color: var(--danger); background: var(--danger-light); }
+
+/* Modal close button */
+.modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    color: var(--text-secondary);
+}
+
+/* Logout button icon alignment */
+.btn .icon { margin-right: .1rem; }
+
+@media (max-width: 768px) {
+    .hamburger { display: inline-flex; }
+}
+
+/* ============================================================
+   FONT AWESOME ICON STYLING
+   ============================================================ */
+
+/* Nav icon pill — FA icon inside */
+.nav-item .nav-icon {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    flex-shrink: 0;
+    font-size: .95rem;
+    transition: transform var(--transition);
+}
+
+/* Per-nav-item icon colors */
+.nav-item[data-view="dashboard"] .nav-icon { background: rgba(110,64,201,.25); color: #a371f7; }
+.nav-item[data-view="planner"]   .nav-icon { background: rgba(56,189,248,.2);  color: #38bdf8; }
+.nav-item[data-view="tasks"]     .nav-icon { background: rgba(63,185,80,.2);   color: #3fb950; }
+.nav-item[data-view="pomodoro"]  .nav-icon { background: rgba(249,115,22,.2);  color: #f97316; }
+.nav-item[data-view="analytics"] .nav-icon { background: rgba(163,113,247,.2); color: #a371f7; }
+.nav-item[data-view="streak"]    .nav-icon { background: rgba(210,153,34,.2);  color: #d29922; }
+
+.nav-item.active .nav-icon { color: #fff; transform: scale(1.08); }
+.nav-item:hover  .nav-icon { transform: scale(1.08); }
+
+/* Stat card icon container */
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1.3rem;
+}
+
+.stat-total     .stat-icon { background: rgba(110,64,201,.2); color: #a371f7; }
+.stat-completed .stat-icon { background: rgba(63,185,80,.2);  color: #3fb950; }
+.stat-pending   .stat-icon { background: rgba(210,153,34,.2); color: #d29922; }
+.stat-percent   .stat-icon { background: rgba(163,113,247,.2);color: #a371f7; }
+
+/* Theme toggle removed — app is permanently Dark Space theme */
+
+/* Hamburger */
+.hamburger {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    padding: .4rem .5rem;
+}
+
+/* Task action buttons */
+.btn-icon {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: .85rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+.btn-icon:hover { transform: scale(1.15); }
+.btn-icon[title="Edit task"]:hover   { color: var(--accent); background: var(--accent-light); }
+.btn-icon[title="Delete task"]:hover { color: var(--danger); background: var(--danger-light); }
+
+/* Modal close */
+.modal-close {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition), color var(--transition);
+}
+.modal-close:hover { background: var(--danger-light); color: var(--danger); }
+
+/* Btn icon spacing */
+.btn i { margin-right: .3rem; }
+.btn-sm i { margin-right: .25rem; }
