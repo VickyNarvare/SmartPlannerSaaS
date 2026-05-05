@@ -187,6 +187,8 @@
                         onclick="switchPomodoroMode('short', this)">☕ Short Break</button>
                 <button class="pomo-tab" data-mode="long"
                         onclick="switchPomodoroMode('long', this)">🛌 Long Break</button>
+                <button class="pomo-tab" data-mode="custom"
+                        onclick="switchPomodoroMode('custom', this)">⚙️ Custom</button>
             </div>
 
             <!-- Circular timer -->
@@ -195,24 +197,35 @@
 
                 <div class="pomo-circle-wrap">
                     <svg class="pomo-svg" viewBox="0 0 200 200" aria-label="Pomodoro timer">
-                        <!-- Background track -->
-                        <circle
-                            id="pomo-track"
-                            class="pomo-track"
-                            cx="100" cy="100" r="90"
-                        />
-                        <!-- Progress ring -->
-                        <circle
-                            id="pomo-ring"
-                            class="pomo-ring"
-                            cx="100" cy="100" r="90"
-                            style="stroke-dasharray: 565.49; stroke-dashoffset: 0;"
-                        />
+                        <circle id="pomo-track" class="pomo-track" cx="100" cy="100" r="90" />
+                        <circle id="pomo-ring"  class="pomo-ring"  cx="100" cy="100" r="90"
+                                style="stroke-dasharray:565.49;stroke-dashoffset:0;" />
                     </svg>
-                    <!-- Time text overlaid on SVG -->
                     <div class="pomo-time-overlay">
                         <span class="pomo-time-text" id="pomo-time-text">25:00</span>
                     </div>
+                </div>
+
+                <!-- Custom timer input — shown only in custom mode -->
+                <div class="custom-timer-inputs" id="custom-timer-inputs" style="display:none;">
+                    <div class="custom-timer-row">
+                        <div class="custom-time-field">
+                            <label for="custom-minutes">Min</label>
+                            <input type="number" id="custom-minutes" min="0" max="99"
+                                   value="25" placeholder="25"
+                                   oninput="onCustomInputChange()" />
+                        </div>
+                        <span class="custom-colon">:</span>
+                        <div class="custom-time-field">
+                            <label for="custom-seconds">Sec</label>
+                            <input type="number" id="custom-seconds" min="0" max="59"
+                                   value="0" placeholder="00"
+                                   oninput="onCustomInputChange()" />
+                        </div>
+                        <button class="btn btn-ghost btn-sm custom-set-btn"
+                                onclick="applyCustomTimer()">Set</button>
+                    </div>
+                    <p class="custom-timer-hint">Enter any duration and press Set</p>
                 </div>
 
                 <!-- Controls -->
@@ -229,7 +242,8 @@
             <!-- Task selector -->
             <div class="card pomo-task-card">
                 <label class="pomo-task-label" for="pomo-task-select">
-                    📌 Link to a task <span style="color:var(--text-secondary);font-weight:400;">(today's pending)</span>
+                    📌 Link to a task
+                    <span style="color:var(--text-secondary);font-weight:400;">(today's pending)</span>
                 </label>
                 <select id="pomo-task-select" onchange="onTaskSelected(this)">
                     <option value="">— No task selected —</option>
