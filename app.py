@@ -33,7 +33,8 @@ if not _secret_key:
     )
 app.secret_key = _secret_key
 
-DATABASE = 'study_planner.db'
+# On Vercel only /tmp is writable; fall back to local path for development
+DATABASE = '/tmp/study_planner.db' if os.environ.get('VERCEL') else 'study_planner.db'
 
 
 # ---------------------------------------------------------------------------
